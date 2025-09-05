@@ -1,0 +1,10 @@
+# Node / JS
+node_modules/
+.DS_Store
+.env
+
+# Backend & frontend build artifacts
+/backend/node_modules/
+/frontend/node_modules/
+/frontend/dist
+/backend/dev.db
