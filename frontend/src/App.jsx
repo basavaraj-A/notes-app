@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const API_URL = "https://notes-backend-tana.onrender.com";
+
 function App() {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
@@ -7,7 +9,7 @@ function App() {
 
   // Fetch notes from backend
   useEffect(() => {
-    fetch("http://localhost:4000/notes")
+    fetch(`${API_URL}/notes`)
       .then((res) => res.json())
       .then((data) => setNotes(data))
       .catch((err) => console.error(err));
@@ -18,7 +20,7 @@ function App() {
     e.preventDefault();
     if (!title || !content) return;
 
-    const res = await fetch("http://localhost:4000/notes", {
+    const res = await fetch(`${API_URL}/notes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, content }),
@@ -55,41 +57,39 @@ function App() {
       </form>
 
       {/* Notes List */}
-     <h2>All Notes</h2>
-<ul style={{ listStyle: "none", padding: 0 }}>
-  {notes.map((note) => (
-    <li
-      key={note.id}
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        padding: "10px",
-        marginBottom: "10px",
-      }}
-    >
-      <h3>{note.title}</h3>
-      <p>{note.content}</p>
+      <h2>All Notes</h2>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {notes.map((note) => (
+          <li
+            key={note.id}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            <h3>{note.title}</h3>
+            <p>{note.content}</p>
 
-      {/* Summarize Button */}
-      <button
-  onClick={async () => {
-    const res = await fetch("http://localhost:4000/summarize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: note.content }),
-    });
-    const data = await res.json();
-    alert(`Summary: ${data.summary}`);
-  }}
-  style={{ marginTop: "8px", padding: "5px 10px" }}
->
-  Summarize Note
-</button>
-
-    </li>
-  ))}
-</ul>
-
+            {/* Summarize Button */}
+            <button
+              onClick={async () => {
+                const res = await fetch(`${API_URL}/summarize`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ content: note.content }),
+                });
+                const data = await res.json();
+                alert(`Summary: ${data.summary}`);
+              }}
+              style={{ marginTop: "8px", padding: "5px 10px" }}
+            >
+              Summarize Note
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
